@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
 from pwdlib import PasswordHash
+from pwdlib.hashers.bcrypt import BcryptHasher
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session, select
@@ -13,8 +14,7 @@ SECRET_KEY = "SUPER_SECRET_KEY_REPLACE_IN_PRODUCTION"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-password_hash = PasswordHash.from_url("bcrypt://")
-
+password_hash = PasswordHash((BcryptHasher(),))
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def verify_password(plain_password, hashed_password):
@@ -22,7 +22,6 @@ def verify_password(plain_password, hashed_password):
 
 def get_password_hash(password):
     return password_hash.hash(password)
-
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
