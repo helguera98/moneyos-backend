@@ -13,7 +13,8 @@ SECRET_KEY = "SUPER_SECRET_KEY_REPLACE_IN_PRODUCTION"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-password_hash = PasswordHash.recommended()
+password_hash = PasswordHash.from_url("bcrypt://")
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def verify_password(plain_password, hashed_password):
